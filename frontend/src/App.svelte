@@ -60,6 +60,11 @@
     role = ''
   }
 
+  function qingchaoTemp(row) {
+    const step = (row.doc?.steps || []).find((s) => s.name === '清炒')
+    return step ? step.temp_c : ''
+  }
+
   if (token) load()
 </script>
 
@@ -84,7 +89,7 @@
     {/if}
     <ul>
       {#each rows as row}
-        <li>{row.herb} · {row.verdict} · {row.reason} · 温度 {row.doc.steps[0].temp_c || 0}</li>
+        <li>{row.herb} · {row.verdict} · {row.reason} · 温度 {qingchaoTemp(row)}</li>
       {/each}
     </ul>
   {/if}

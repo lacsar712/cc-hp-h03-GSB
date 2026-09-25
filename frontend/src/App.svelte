@@ -60,6 +60,11 @@
     role = ''
   }
 
+  function fryStep(row) {
+    const steps = row.doc?.steps || []
+    return steps.find((s) => s.name === '清炒') || {}
+  }
+
   if (token) load()
 </script>
 
@@ -82,11 +87,26 @@
       <button on:click={save}>写入清炒记录</button>
       {#if error}<p>{error}</p>{/if}
     {/if}
-    <ul>
-      {#each rows as row}
-        <li>{row.herb} · {row.verdict} · {row.reason} · 温度 {row.doc.steps[0].temp_c || 0}</li>
-      {/each}
-    </ul>
+    <table>
+      <thead>
+        <tr>
+          <th>饮片</th>
+          <th>结论</th>
+          <th>说明</th>
+          <th>清炒温度(℃)</th>
+        </tr>
+      </thead>
+      <tbody>
+        {#each rows as row}
+          <tr>
+            <td>{row.herb}</td>
+            <td>{row.verdict}</td>
+            <td>{row.reason}</td>
+            <td>{fryStep(row).temp_c}</td>
+          </tr>
+        {/each}
+      </tbody>
+    </table>
   {/if}
 </main>
 
@@ -94,4 +114,7 @@
   main { font-family: sans-serif; max-width: 720px; margin: 24px auto; color: #3f2f1f; }
   h1 { color: #7c2d12; }
   input { margin-right: 8px; padding: 6px; }
+  table { border-collapse: collapse; margin-top: 12px; width: 100%; }
+  th, td { border: 1px solid #c9b99a; padding: 6px 10px; text-align: left; }
+  th { background: #f3ead9; }
 </style>

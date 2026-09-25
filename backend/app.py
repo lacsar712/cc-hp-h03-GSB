@@ -11,7 +11,7 @@ from pydantic import BaseModel, Field
 from psycopg.rows import dict_row
 
 from rules import judge
-from temp_blank import map_list_fields, detail_keeps_temp, map_api_fields
+from serializers import map_list_fields, detail_keeps_temp, map_api_fields
 
 SECRET = os.environ.get("JWT_SECRET", "herb-process-dev-secret")
 DSN = os.environ.get("DATABASE_URL", "postgresql://app:app@localhost:54393/herb")
@@ -129,7 +129,7 @@ def create_batch(body: BatchIn, user: dict = Depends(require_writer)):
             (body.herb.strip(), json.dumps(doc, ensure_ascii=False), verdict, reason, user["username"], datetime.now(timezone.utc)),
         ).fetchone()
         conn.commit()
-    return row
+    return map_api_fields(dict(row))
 
 
 @app.get("/api/batches/{batch_id}")
